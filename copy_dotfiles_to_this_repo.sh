@@ -1,4 +1,6 @@
 mkdir -p ./.config/
-cp -r ~/.config/nvim/ ./.config/nvim/
+# Note to self: be careful with recursive directory copies.
+# Adding a slash at the end will copy the dir *into* the dest, not replace dest.
+cp -ruv ~/.config/nvim/ ./.config
 
-cp ~/.tmux.conf ./.tmux.conf
+cp -uv ~/.tmux.conf ./.tmux.conf
