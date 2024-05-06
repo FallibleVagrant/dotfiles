@@ -1,4 +1,4 @@
 mkdir -p ./.config/
-cp -ri ~/.config/nvim/ ./.config/nvim/
+cp -r ~/.config/nvim/ ./.config/nvim/
 
-cp -i ~/.tmux.conf ./.tmux.conf
+cp ~/.tmux.conf ./.tmux.conf
