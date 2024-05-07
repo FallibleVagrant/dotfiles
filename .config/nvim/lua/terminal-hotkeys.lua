@@ -26,7 +26,7 @@ vim.keymap.set("n", "<F5>", function()
 	else
 		local filetype_to_command = {
 			["rust"] = "cargo run",
-			["c"] = "make && ./" .. vim.fn.expand("%"),
+			["c"] = "make && echo \"Running './" .. vim.fn.expand("%:t:r") .. "'...\" && ./" .. vim.fn.expand("%:t:r"),
 			["python"] = "python3 " .. vim.fn.expand("%"),
 			["sh"] = "bash " .. vim.fn.expand("%"),
 			["tex"] = "pdflatex " .. vim.fn.expand("%"),
