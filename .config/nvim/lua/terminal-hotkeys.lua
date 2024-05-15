@@ -16,6 +16,26 @@ vim.keymap.set("n", "<F3>", function()
 	vim.cmd.startinsert()
 end, { desc = "Opens a terminal in insert mode." })
 
+-- Function snippet from:
+-- https://stackoverflow.com/questions/76675375/how-to-get-all-files-and-directories-within-the-current-working-directory-of-neo
+-- Checks if name_to_check is in the cwd.
+local exists_in_cwd = function(name_to_check)
+	local cwd_path = vim.fn.getcwd()
+
+	-- Get all files and directories in CWD
+	local cwd_files_and_directories = vim.split(vim.fn.glob(cwd_path .. "/*"), "\n", { trimempty = true })
+
+	-- Check if specified file or directory exists
+	local full_path_to_check = cwd_path .. "/" .. name_to_check
+	print('Checking for: "' .. full_path_to_check .. '"')
+	for _, item in pairs(cwd_files_and_directories) do
+		if item == full_path_to_check then
+			return true
+		end
+	end
+	return false
+end
+
 -- Compiles and runs the current file in a new terminal buffer.
 -- Compilation command can be changed with 'f5cmd'.
 vim.keymap.set("n", "<F5>", function()
@@ -27,12 +47,19 @@ vim.keymap.set("n", "<F5>", function()
 		local filetype_to_command = {
 			["rust"] = "cargo run",
 			["c"] = "make && echo \"Running './" .. vim.fn.expand("%:t:r") .. "'...\" && ./" .. vim.fn.expand("%:t:r"),
+			["java"] = "make && echo \"Running 'java " .. vim.fn.expand("%:t:r") .. "'...\" && java " .. vim.fn.expand(
+				"%:t:r"
+			),
 			["python"] = "python3 " .. vim.fn.expand("%"),
 			["sh"] = "bash " .. vim.fn.expand("%"),
 			["tex"] = "pdflatex " .. vim.fn.expand("%"),
 		}
 
 		cmd = filetype_to_command[vim.bo.filetype]
+
+		if exists_in_cwd("Makefile") and vim.bo.filetype ~= "java" then
+			cmd = "make && echo \"Running './" .. vim.fn.expand("%:t:r") .. "'...\" && ./" .. vim.fn.expand("%:t:r")
+		end
 
 		if cmd == nil then
 			print("No default compile cmd found; set f5cmd with: :F5cmd <insert-cmd-here>")
@@ -60,6 +87,10 @@ vim.keymap.set("n", "<F6>", function()
 		}
 
 		cmd = filetype_to_command[vim.bo.filetype]
+
+		if exists_in_cwd("Makefile") then
+			cmd = "make"
+		end
 
 		if cmd == nil then
 			print("No default compile cmd found; set f6cmd with: :F6cmd <insert-cmd-here>")
