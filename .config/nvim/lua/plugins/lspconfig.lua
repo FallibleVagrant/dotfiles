@@ -102,7 +102,7 @@ return { -- LSP Configuration & Plugins
 				--    See `:help CursorHold` for information about when this is executed
 				--
 				-- When you move your cursor, the highlights will be cleared (the second autocommand).
-				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				-- local client = vim.lsp.get_client_by_id(event.data.client_id)
 				-- if client and client.server_capabilities.documentHighlightProvider then
 				--   local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
 				--   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -130,11 +130,11 @@ return { -- LSP Configuration & Plugins
 				-- code, if the language server you are using supports them
 				--
 				-- This may be unwanted, since they displace some of your code
-				if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-					map("<leader>th", function()
-						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-					end, "[T]oggle Inlay [H]ints")
-				end
+				-- if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+				-- 	map("<leader>th", function()
+				-- 		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+				-- 	end, "[T]oggle Inlay [H]ints")
+				-- end
 			end,
 		})
 
@@ -143,7 +143,7 @@ return { -- LSP Configuration & Plugins
 		--  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
 		--  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		-- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 		-- Enable the following language servers
 		--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -158,7 +158,16 @@ return { -- LSP Configuration & Plugins
 			-- clangd = {},
 			-- gopls = {},
 			-- pyright = {},
-			-- rust_analyzer = {},
+			rust_analyzer = {
+				settings = {
+					["rust-analyzer"] = {
+						diagnostics = { enable = false },
+						checkOnSave = { enable = false },
+						-- inlayHints = { enable = false },
+						-- cargo = { allFeatures = false },
+					},
+				},
+			},
 			jdtls = {},
 			-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 			--
@@ -179,7 +188,7 @@ return { -- LSP Configuration & Plugins
 							callSnippet = "Replace",
 						},
 						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-						-- diagnostics = { disable = { 'missing-fields' } },
+						diagnostics = { disable = { "missing-fields" } },
 					},
 				},
 			},
