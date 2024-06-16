@@ -161,6 +161,9 @@ return { -- LSP Configuration & Plugins
 			rust_analyzer = {
 				settings = {
 					["rust-analyzer"] = {
+						completion = {
+							autoimport = { enable = false },
+						},
 						diagnostics = { enable = false },
 						checkOnSave = { enable = false },
 						-- inlayHints = { enable = false },
